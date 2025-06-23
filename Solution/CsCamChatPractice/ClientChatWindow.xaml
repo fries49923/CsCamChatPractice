@@ -1,0 +1,314 @@
+﻿<Window x:Class="CsCamChatPractice.ClientChatWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:CsCamChatPractice"
+        xmlns:vm="clr-namespace:CsCamChatPractice.ViewModel"
+        xmlns:convert="clr-namespace:CsCamChatPractice.Converter"
+        xmlns:selector="clr-namespace:CsCamChatPractice.Selector"
+        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+        xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        mc:Ignorable="d"
+        Title="ClientChatWindow" 
+        Width="1440"
+        Height="900"
+        MinWidth="800"
+        MinHeight="600"
+        WindowStartupLocation="CenterScreen">
+
+    <Window.Resources>
+
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+
+                <ResourceDictionary Source="pack://application:,,,/CsCamChatPractice;component/Resource/CommonStyle.xaml"/>
+
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+
+    </Window.Resources>
+
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding Path=WindowLoadedCommand}"/>
+        </i:EventTrigger>
+
+        <i:EventTrigger EventName="Closing">
+            <i:InvokeCommandAction Command="{Binding Path=WindowClosingCommand}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+
+    <Grid Background="#191919">
+
+        <Grid>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="360" MinWidth="360" MaxWidth="700"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid Grid.Column="0">
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="100"/>
+                </Grid.RowDefinitions>
+
+                <Border Grid.Row="0"
+                        Margin="20"
+                        CornerRadius="12">
+
+                    <Border.Background>
+                        <ImageBrush Stretch="Uniform"
+                                    ImageSource="{Binding Path=WebcamImgSource}" />
+                    </Border.Background>
+
+                </Border>
+
+                <StackPanel Grid.Row="1"
+                            Orientation="Horizontal"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center">
+
+                    <!--IP Config-->
+                    <md:PopupBox Margin="5,0"
+                                 StaysOpen="True"
+                                 PlacementMode="TopAndAlignLeftEdges">
+
+                        <md:PopupBox.IsEnabled>
+                            <Binding Path="IsConnect">
+                                <Binding.Converter>
+                                    <convert:BooleanNegationConverter/>
+                                </Binding.Converter>
+                            </Binding>
+                        </md:PopupBox.IsEnabled>
+
+                        <md:PopupBox.ToggleContent>
+
+                            <Border CornerRadius="5">
+
+                                <Grid Width="50"
+                                      Height="50">
+                                    <ui:SymbolIcon Foreground="White"
+                                                   FontSize="28"
+                                                   Symbol="Settings24"/>
+                                </Grid>
+
+                                <Border.Style>
+                                    <Style TargetType="Border">
+                                        <Style.Triggers>
+
+                                            <DataTrigger Binding="{Binding Path=IsPopupOpen, RelativeSource={RelativeSource AncestorType=md:PopupBox}}"
+                                                         Value="True">
+                                                <Setter Property="Background"
+                                                        Value="{StaticResource Brush.Secondary01.500}"/>
+                                            </DataTrigger>
+
+                                            <DataTrigger Binding="{Binding Path=IsPopupOpen, RelativeSource={RelativeSource AncestorType=md:PopupBox}}"
+                                                         Value="False">
+                                                <Setter Property="Background"
+                                                        Value="{StaticResource Brush.White.alpha16}"/>
+                                            </DataTrigger>
+
+                                        </Style.Triggers>
+                                    </Style>
+                                </Border.Style>
+
+                            </Border>
+
+                        </md:PopupBox.ToggleContent>
+
+                        <Border Background="#252525"
+                                Width="300"
+                                Height="100"
+                                CornerRadius="10">
+
+                            <StackPanel Margin="15">
+
+                                <TextBlock Text="IP Config"
+                                           Foreground="White"/>
+
+
+                                <ui:TextBox Margin="0,10,10,0"
+                                            VerticalContentAlignment="Center"
+                                            FontSize="14"
+                                            PlaceholderText="IP Address"
+                                            Text="{Binding Path=IpAddress, UpdateSourceTrigger=PropertyChanged}"/>
+
+                            </StackPanel>
+
+                        </Border>
+
+                        <md:PopupBox.ToolTip>
+                            <TextBlock Text="IP Config"/>
+                        </md:PopupBox.ToolTip>
+
+                    </md:PopupBox>
+
+                    <!--Connect-->
+                    <Button Margin="5,0"
+                            Width="50"
+                            Height="50"
+                            Command="{Binding Path=ToggleConnectCommand}">
+
+                        <ui:SymbolIcon FontSize="28">
+
+                            <ui:SymbolIcon.Style>
+                                <Style TargetType="ui:SymbolIcon">
+                                    <Style.Triggers>
+
+                                        <DataTrigger Binding="{Binding Path=IsConnect}"
+                                                     Value="True">
+                                            <Setter Property="Symbol" Value="PlugConnected24"/>
+                                        </DataTrigger>
+
+                                        <DataTrigger Binding="{Binding Path=IsConnect}"
+                                                     Value="False">
+                                            <Setter Property="Symbol" Value="PlugDisconnected24"/>
+                                        </DataTrigger>
+
+                                    </Style.Triggers>
+                                </Style>
+                            </ui:SymbolIcon.Style>
+
+                        </ui:SymbolIcon>
+
+                        <Button.ToolTip>
+                            <TextBlock Text="Connect / Disconnect"/>
+                        </Button.ToolTip>
+
+                    </Button>
+
+                    <!--Turn on/ off the webcam-->
+                    <Button Margin="5,0"
+                            Width="50"
+                            Height="50"
+                            IsEnabled="{Binding Path=IsConnect}"
+                            Command="{Binding Path=ToggleWebcamCommand}">
+
+                        <ui:SymbolIcon FontSize="28">
+
+                            <ui:SymbolIcon.Style>
+                                <Style TargetType="ui:SymbolIcon">
+                                    <Style.Triggers>
+
+                                        <DataTrigger Binding="{Binding Path=IsWebcamOn}"
+                                                     Value="True">
+                                            <Setter Property="Symbol" Value="Video24"/>
+                                        </DataTrigger>
+
+                                        <DataTrigger Binding="{Binding Path=IsWebcamOn}"
+                                                     Value="False">
+                                            <Setter Property="Symbol" Value="VideoProhibited24"/>
+                                        </DataTrigger>
+
+                                    </Style.Triggers>
+                                </Style>
+                            </ui:SymbolIcon.Style>
+
+                        </ui:SymbolIcon>
+
+                        <Button.ToolTip>
+                            <TextBlock Text="Turn on/ off the webcam"/>
+                        </Button.ToolTip>
+
+                    </Button>
+
+                    <!--Gray Filter-->
+                    <ToggleButton Margin="5,0"
+                                  Width="50"
+                                  Height="50"
+                                  IsChecked="{Binding Path=UseGrayFilter}">
+
+                        <ui:SymbolIcon FontSize="28"
+                                       Symbol="PhotoFilter24"/>
+
+                    </ToggleButton>
+
+                </StackPanel>
+
+            </Grid>
+
+            <GridSplitter Grid.Column="1"
+                          HorizontalAlignment="Stretch"
+                          Width="5"
+                          Background="#05FFFFFF"/>
+
+            <Grid Grid.Column="2">
+
+                <Border Margin="20"
+                        Background="#55000000"
+                        CornerRadius="12">
+
+                    <Grid>
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <ListBox x:Name="lbChatMsg"
+                                 Grid.Row="0"
+                                 Padding="10"
+                                 ScrollViewer.CanContentScroll="False"
+                                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                 ItemTemplate="{StaticResource ChatMsgDataTemplate}"
+                                 ItemsSource="{Binding Path=ChatMessages}">
+
+                            <ListBox.ItemContainerStyleSelector>
+                                <selector:ChatRoleStyleSelector
+                                    UserRole="{StaticResource UserRoleListBoxItemStyle}"
+                                    OtherRole="{StaticResource OtherRoleListBoxItemStyle}"/>
+                            </ListBox.ItemContainerStyleSelector >
+
+                        </ListBox>
+
+                        <Grid Grid.Row="1"
+                              Margin="10,10,10,20"
+                              Height="50">
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <ui:TextBox Grid.Column="0"
+                                        VerticalContentAlignment="Center"
+                                        FontSize="12"
+                                        PlaceholderText="Write a message..."
+                                        Text="{Binding Path=ChatMsg, UpdateSourceTrigger=PropertyChanged}">
+                                <ui:TextBox.InputBindings>
+                                    <KeyBinding Key="Enter"
+                                                Command="{Binding Path=SendMessageCommand}"/>
+                                </ui:TextBox.InputBindings>
+                            </ui:TextBox>
+
+                            <ui:Button Grid.Column="1"
+                                       Margin="5,0,0,0"
+                                       Width="50"
+                                       Height="50"
+                                       Foreground="White"
+                                       Appearance="Primary"
+                                       Command="{Binding Path=SendMessageCommand}">
+
+                                <ui:SymbolIcon FontSize="28"
+                                               Symbol="Send24"/>
+
+                            </ui:Button>
+
+                        </Grid>
+
+                    </Grid>
+
+                </Border>
+
+            </Grid>
+
+        </Grid>
+
+    </Grid>
+
+</Window>

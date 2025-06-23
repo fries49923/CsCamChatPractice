@@ -1,0 +1,60 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!--ChatMsgDataTemplate-->
+    <DataTemplate x:Key="ChatMsgDataTemplate">
+        <StackPanel Margin="5">
+            <DockPanel LastChildFill="False">
+                <TextBlock DockPanel.Dock="Left"
+                           Foreground="White"
+                           Text="{Binding Path=Role}"/>
+                <TextBlock DockPanel.Dock="Right"
+                           Foreground="Gray"
+                           Text="{Binding Path=Timestamp, StringFormat=HH:mm}"/>
+            </DockPanel>
+
+            <TextBox Margin="0,10,0,0"
+                     BorderThickness="0"
+                     Background="Transparent"
+                     Foreground="White"
+                     TextWrapping="Wrap"
+                     Text="{Binding Path=Message}"
+                     IsReadOnly="True"
+                     Style="{x:Null}"/>
+        </StackPanel>
+    </DataTemplate>
+
+    <!--RoleListBoxItemStyleBase-->
+    <Style x:Key="RoleListBoxItemStyleBase" TargetType="ListBoxItem">
+        <Setter Property="MinWidth" Value="120"/>
+        
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ListBoxItem">
+                    <Border CornerRadius="10"
+                            Padding="10"
+                            Background="{TemplateBinding Background}">
+                        <ContentPresenter/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--UserRoleListBoxItemStyle-->
+    <Style x:Key="UserRoleListBoxItemStyle" TargetType="ListBoxItem"
+           BasedOn="{StaticResource RoleListBoxItemStyleBase}">
+        <Setter Property="Margin" Value="20,20,10,0"/>
+        <Setter Property="Background" Value="#10FFFFFF"/>
+        <Setter Property="HorizontalAlignment" Value="Right"/>
+    </Style>
+
+    <!--OtherRoleListBoxItemStyle-->
+    <Style x:Key="OtherRoleListBoxItemStyle" TargetType="ListBoxItem"
+           BasedOn="{StaticResource RoleListBoxItemStyleBase}">
+        <Setter Property="Margin" Value="10,20,20,0"/>
+        <Setter Property="Background" Value="#70000000"/>
+        <Setter Property="HorizontalAlignment" Value="Left"/>
+    </Style>
+
+</ResourceDictionary>
